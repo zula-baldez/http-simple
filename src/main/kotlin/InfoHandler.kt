@@ -30,20 +30,6 @@ object InfoHandler {
     fun getRoomInfo(roomId: Int, date: String): ScheduledRoom {
         val request = retrofit.create(APIInterface::class.java)
 
-        val call = request.getRoomInfo(
-            ISU_APP_COOKIE,
-            p_request,
-            p_instance,
-            p_flow_id,
-            p_flow_step_id,
-            "P4_AUD_SEL",
-            "-17",
-            "P4_ROOMS_ID2",
-            roomId.toString(),
-            "P4_DATE",
-            date
-
-        )
         var parsed: ScheduledRoom = ScheduledRoom("", HashMap(), -1);
         val response = request.getRoomInfo(ISU_APP_COOKIE,
             p_request,
@@ -57,29 +43,10 @@ object InfoHandler {
             "P4_DATE",
             date
         )
-        //println(response.execute().body()?.string())
+        //no errors handling!
         parsed = parser.parseSchedule(response.execute().body()?.string(), roomId, date)
 
-        /*call(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.isSuccessful) {
-                    //println(response.body()?.string())
-                    parsed = parser.parseSchedule(response.body()?.string(), roomId, date)
 
-
-                } else {
-                    val errorMessage = response.message() // Get error message
-                    print(errorMessage)
-                }
-                return
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                val errorMessage = t.message // Get error message
-                print(errorMessage)
-                return
-            }
-        })*/
         return parsed
 
     }
