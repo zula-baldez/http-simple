@@ -1,6 +1,11 @@
+
+
 fun main(args: Array<String>) {
     val infoHandler : InfoHandler = InfoHandler;
-    val ans = infoHandler.getRoomInfo(20007, "25.03.2023")
-    println(ans.schedule)
+
+
+    val ans = infoHandler.getFreeRooms(InfoHandler.Place.KRONVA, "17:00-17:30", "21.03.2023", InfoHandler.Type.MEETING_ROOM)
+    println(ans)
+
     return
 }
