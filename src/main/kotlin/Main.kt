@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
 
 
      infoHandler.checkInstance()
-    val ans =infoHandler.getFreeRooms(InfoHandler.Place.KRONVA, "15:30-16:00", "25.05.2023", InfoHandler.Type.MEETING_ROOM)
+    val ans =infoHandler.getFreeRooms(InfoHandler.Place.KRONVA, "10:00-10:30", "25.05.2023", InfoHandler.Type.MEETING_ROOM)
     println(ans)
 
     return
