@@ -4,12 +4,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object InfoHandler {
-    val ISU_APP_COOKIE: String = "ISU_AP_COOKIE=ORA_WWV-VxisGxe4umyc5wzJ44Nz3HAz"
-    val p_request: String = "PLUGIN=1AACCD2ABE63CF378BB0B1CBA21E4F4F67C9922EFAA73885C80F4902F20712B1"
-    val p_instance: String = "101939722861776"
+    val ISU_APP_COOKIE: String = "ISU_AP_COOKIE=ORA_WWV-bo6MAG/S6KDETM/97lG/vaI8    "
+    var p_request: String = "PLUGIN="
+    var p_instance: String = ""
     val p_flow_id: String = "2431"
     val p_flow_step_id: String = "4"
     val parser: ScheduleParser = ScheduleParser()
+    fun setRequest(s: String) {
+        p_request = "PLUGIN=${s}"
+    }
 
     enum class Type {
         MEETING_ROOM,
@@ -20,7 +23,7 @@ object InfoHandler {
         KRONVA, LOMO
     }
 
-    private val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).followRedirects(true)
+    private var client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).followRedirects(true)
         .followSslRedirects(true).build()
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://isu.ifmo.ru/")
@@ -83,16 +86,58 @@ object InfoHandler {
         return ArrayList()
 
     }
-    private fun getFreeList(aud: HashMap<Int, Int>, time: String, date: String) : ArrayList<Int> {
-        val freeList  = ArrayList<Int>()
-        for (pair in aud.entries.iterator() ) {
+
+    private fun getFreeList(aud: HashMap<Int, Int>, time: String, date: String): ArrayList<Int> {
+        val freeList = ArrayList<Int>()
+        for (pair in aud.entries.iterator()) {
             val parsed = getRoomInfo(pair.value, date)
-            if(parsed.schedule[time] == true) {
+            if (parsed.schedule[time] == true) {
                 freeList.add(pair.key)
             }
         }
         return freeList
     }
+
+    fun checkInstance() {
+        val cl = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).followRedirects(false)
+            .followSslRedirects(false).build()
+        val rf = Retrofit.Builder()
+            .baseUrl("https://isu.ifmo.ru/")
+            .client(cl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+        val request = rf.create(APIInterface::class.java)
+        val call = request.checkForRedirect(
+            ISU_APP_COOKIE,
+        )
+        val response = call.execute()
+        if (response.code() == 302) {
+            println(response.headers().get("Location"))
+        }
+        p_instance = response.headers().get("Location")!!.split(":")[2] //todo NULL HANDLING
+        println(p_instance)
+        parsePlugin()
+    }
+
+    fun parsePlugin() {
+        val request = retrofit.create(APIInterface::class.java)
+        val call = request.getHtmlWithPlugin(ISU_APP_COOKIE)
+        //todo NULL CHECKING
+        val pluginString = call.execute().body()?.string()?.split('\n')?.get(1923)
+        val s1 = pluginString?.substring(pluginString.indexOf("ajaxIdentifier"))
+        val s2 = s1?.split(':')?.get(1)
+        val s3 = s2?.split(',')?.get(0)
+        val s4 = s3?.substring(1, s3.length - 1)
+        if (s4 != null) {
+            setRequest(s4)
+        }
+        println(s4)
+
+    }
+
 }
+
+
 
 
