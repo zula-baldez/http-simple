@@ -4,7 +4,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object InfoHandler {
-    val ISU_APP_COOKIE: String = "ISU_AP_COOKIE=ORA_WWV-bo6MAG/S6KDETM/97lG/vaI8"
+    val ISU_APP_COOKIE: String = "ISU_AP_COOKIE=ORA_WWV-TpaRYgNQd7v6wxIMGYb7+JZN"
     var p_request: String = "PLUGIN="
     var p_instance: String = ""
     val p_flow_id: String = "2431"
@@ -72,7 +72,6 @@ object InfoHandler {
     }
     //time in format 8:30
     fun getFreeRooms(place: Place, time: String, date: String, type: Type) : ArrayList<Int>{
-        val freeList  = ArrayList<Int>()
         if (place == Place.KRONVA) {
             if (type == Type.AUDITORIUM) {
 

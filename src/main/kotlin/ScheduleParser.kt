@@ -15,7 +15,7 @@ class ScheduleParser {
             if(element.select(".th_c").text().split(" ").size <= 1) continue
             val time: String = element.select(".th_c").text().split(" ")[1]
 
-            var free: Boolean = false
+            var free = false
             if (element.select(".busy").size == 0) {
                 free = true;
             }
