@@ -1,9 +1,8 @@
-import InfoHandler.p_instance
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
-interface APIInterface {
+interface RoomInfoApi {
     //pls/apex/f?p=2431:4:1019::/
     ///pls/apex/wwv_flow.show
     @POST("/pls/apex/wwv_flow.show")
@@ -69,5 +68,38 @@ interface APIInterface {
         @Field("username") username: String = "336768",
         @Field("password") password: String = "528759645224Aleks.",
         @Field("credentialId") credential_id: String = "",
-    ): Call<ResponseBody>
+
+        ): Call<ResponseBody>
+
+    @POST("/pls/apex/wwv_flow.accept")
+    @FormUrlEncoded
+    fun tryBookAAAAAAAAAAA(
+        @Header("Cookie") cookie: String,
+        @Field("flow_id") flow_id: String,
+        @Field("p_flow_step_id") p_flow_step_id: String,
+        @Field("p_instance") p_instance: String,
+        @Field("p_request") p_request: String = "PASS_REQUEST",
+        @Field("p_t02") isu_num: String = "336439",
+        @Field("p_t03") numAndName: String = "[336439] Верещагин Е.С.",
+        @Field("p_t10") againIsu: String = "336439",
+        @Field("p_t12") aud_num: String = "1013",
+        @Field("p_t14") typeOfTimeScheduling: String = "-603",
+        @Field("p_t15") date: String = "16.03.2023",
+        @Field("p_t16") roomId: String = "18865",
+        @Field("p_t21") roomIdAgain: String = "18865",
+        @Field("p_t23") text: String = "test",
+        @Field("p_t26") start: String = "10:00",
+        @Field("p_t27") end: String = "10:30",
+        @Field("p_t28") people_num: String = "10",
+        @Field("p_t30") numIsuAgainAgain: String = "336439",
+        @Field("p_t31") phone: String = "+7 (953) 2607422",
+
+        @Field("p_t35") hz: String = "day",
+        @Field("p_t54") startDay: String = "15.03.2023",
+        @Field("p_t20") loh: String = "24131907",
+
+        //p_t20: 24131907
+        ): Call<ResponseBody>
+
+
 }
