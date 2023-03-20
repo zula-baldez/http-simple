@@ -1,3 +1,5 @@
+package util
+
 data class RoomInfoBody(
     val p_request: String,
     val p_flow_id: String,

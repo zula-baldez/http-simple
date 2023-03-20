@@ -1,7 +1,12 @@
+package info
+
+import util.LoggingInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import util.ScheduleParser
+import util.ScheduledRoom
 
 class InfoHandler(IsuApCookie: String) {
 
@@ -11,6 +16,7 @@ class InfoHandler(IsuApCookie: String) {
     val p_flow_id: String = "2431"
     val p_flow_step_id: String = "4"
     val parser: ScheduleParser = ScheduleParser()
+    var bookingHtmlPage: String = ""
     fun setRequest(s: String) {
         p_request = "PLUGIN=${s}"
     }
@@ -117,9 +123,10 @@ class InfoHandler(IsuApCookie: String) {
         val request = retrofit.create(RoomInfoApi::class.java)
         val call = request.getHtmlWithPlugin(ISU_APP_COOKIE)
         //todo NULL CHECKING
-        val pluginString = call.execute().body()?.string()?.split('\n')?.get(1932)
-        //println(call.execute().body()?.string())
-        val s1 = pluginString?.substring(pluginString.indexOf("ajaxIdentifier"))
+        val pluginString = call.execute().body()?.string()!!
+        bookingHtmlPage = pluginString
+        var s1 = pluginString.split("muledev_server_region_refresh")[3]
+        s1 = s1.substring(s1.indexOf("ajaxIdentifier"))
         val s2 = s1?.split(':')?.get(1)
         val s3 = s2?.split(',')?.get(0)
         val s4 = s3?.substring(1, s3.length - 1)

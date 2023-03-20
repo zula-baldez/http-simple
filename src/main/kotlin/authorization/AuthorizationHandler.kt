@@ -1,6 +1,7 @@
-import okhttp3.Cookie
-import okhttp3.CookieJar
-import okhttp3.HttpUrl
+package authorization
+
+import util.LoggingInterceptor
+import cookies.CookieHandler
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,22 +9,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.security.SecureRandom
 import java.util.*
 
-class AuthorizationHandler {
+class AuthorizationHandler( cookies : CookieHandler) {
     //cookieJar(new SessionCookieJar())
-    private val cookieStore = mutableMapOf<String, MutableList<Cookie>>()
-    private val cookieJar = object : CookieJar {
-
-
-        override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-            println("got $cookies")
-            cookieStore[url.host()] = cookies.toMutableList()
-        }
-
-        override fun loadForRequest(url: HttpUrl): List<Cookie> {
-            println(cookieStore[url.host()])
-            return cookieStore[url.host()] ?: emptyList()
-        }
-    }
+    private val cookieStore = cookies.cookieStore
+    private val cookieJar = cookies.cookies
     private var client =
         OkHttpClient.Builder().cookieJar(cookieJar).addInterceptor(LoggingInterceptor()).followRedirects(false)
             .followSslRedirects(false).build()
